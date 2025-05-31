@@ -1,10 +1,24 @@
-import AudioPlayer from '../components/AudioPlayer'
+"use client";
 
-export default function Home() {
+import { useSession, signIn, signOut } from "next-auth/react";
+
+export default function Page() {
+  const { data: session } = useSession();
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-gray-900 text-white">
-      <h1 className="text-3xl font-bold mb-4">My Music Player</h1>
-      <AudioPlayer />
-    </main>
-  )
+    <div className="p-10">
+      {!session ? (
+        <button onClick={() => signIn("google")} className="bg-blue-500 text-white p-2 rounded">
+          Login with Google
+        </button>
+      ) : (
+        <div>
+          <p>Welcome, {session.user?.name}</p>
+          <button onClick={() => signOut()} className="bg-red-500 text-white p-2 rounded">
+            Sign out
+          </button>
+        </div>
+      )}
+    </div>
+  );
 }
